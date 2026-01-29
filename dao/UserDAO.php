@@ -53,8 +53,11 @@ class UserDAO implements UserDAOInterface {
         $stmt->conn->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->bindParam(":email", $user->email);
         $stmt->execute();
-        if($redirect) {
+
+        if($stmt->rowCount() > 0) {
             // Redireciona para o perfil do usuario
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $this->buildUser($data);
         }
         
     }
