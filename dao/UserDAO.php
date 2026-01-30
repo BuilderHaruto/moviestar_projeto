@@ -1,6 +1,6 @@
 <?php
 
-require_once("models/User.php");
+include_once("models/User.php");
 require_once("models/Message.php");
 
 class UserDAO implements UserDAOInterface {
