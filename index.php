@@ -5,8 +5,13 @@
   // Incluir o DAO dos filmes
   require_once("dao/MovieDAO.php");
 
+  // Incluir as  Messagens 
+  require_once("modeles/Message.php");
+
   // Criar o objeto DAO para acessar os filmes
-  $movieDao = new MovieDAO($conn, $BASE_URL);
+  // $movieDao = new MovieDAO($conn, $BASE_URL);
+
+  
 
   // Buscar os filmes mais recentes
   $latestMovies = $movieDao->getLatestMovies() ?? []; /// Operador de Coalescencia nula
