@@ -22,17 +22,63 @@ class ReviewDao implements ReviewDAOInterface {
 
     public function create(Review $review) {
         // Adiciona uma nova review
+        if($this->hasAlreadyReviewed($review->movies_id, $review->users_id)) {
+            return false;
+        }
+
+        $stmt = $this->conn->prepare("
+            INSERT INTO reviews (rating, review, users_id, movies_id)
+            VALUES (:rating, :review, :users_id, :movies_id)
+        ");
+
+        $stmt->bindParam(":rating", $review->rating);
+        $stmt->bindParam(":review", $review->review);
+        $stmt->bindParam(":users_id", $review->users_id);
+        $stmt->bindParam(":movies_id", $review->movies_id);
+
+        $stmt->execute();
+        return true;
     }
 
     public function getMoviesReview($id) {
         // Retorna todas as reviews de um filme
+        $stmt = $this->conn->prepare("SELECT * FROM reviews WHERE movies_id = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+
+        $reviews = [];
+        foreach($stmt->fetchAll() as $data) {
+            $reviews[] = $this->buildReview($data);
+        }
+
+        return $reviews;
     }
 
     public function hasAlreadyReviewed($id, $userId) {
         // Verifica se o usuário já fez review desse filme
+        $stmt = $this->conn->prepare("
+            SELECT id FROM reviews 
+            WHERE movies_id = :id AND users_id = :userId
+        ");
+        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":userId", $userId);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 
     public function getRatings($id) {
         // Calcula a média das avaliações de um filme
+        $stmt = $this->conn->prepare("
+            SELECT AVG(rating) AS media 
+            FROM reviews 
+            WHERE movies_id = :id
+        ");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+        return $result["media"];
+    
     }
 }
