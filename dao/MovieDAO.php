@@ -25,7 +25,7 @@ class MovieDAO implements MovieDAOInterface {
 
     public function findAll() {
         // Retorna todos os filmes
-        $stmt = $this->$conn->query("SELECT * FROM movie ");
+        $stmt = $this->conn->query("SELECT * FROM movie ");
         $movie=[];
         
          foreach($stmt->fetchAll() as $data) {
@@ -53,7 +53,7 @@ class MovieDAO implements MovieDAOInterface {
             $stmt->bindParam(":category", $category);
             $stmt->execute();
 
-            $movies = [];
+            $movie = [];
             foreach($stmt->fetchAll() as $data) {
                 $movie[] = $this->buildMovie($data);
             }
