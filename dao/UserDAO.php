@@ -29,7 +29,7 @@ class UserDAO implements UserDAOInterface {
         $user->bio = $data["bio"];
         $user->token = $data["token"];
 
-        return $user;
+        return $user; 
 
     }
 
