@@ -10,7 +10,7 @@ error_reporting(E_ALL);
   require_once("dao/MovieDAO.php");
 
   // Incluir as  Messagens 
-  require_once("modeles/Message.php");
+  // require_once("modeles/Message.php");
 
   // Criar o objeto DAO para acessar os filmes
   $movieDao = new MovieDAO($conn, $BASE_URL);
