@@ -48,7 +48,7 @@
     <?php if(isset($_SESSION[""])): ?> <!--usando variavel if para verificar a existência de cadastro de usuário--> 
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a href="newmovie.html" class="nav-link"><i class="bi bi-plus-square"></i>Incluir Filme</a>
+        <a href="newmovie.php" class="nav-link"><i class="bi bi-plus-square"></i>Incluir Filme</a>
       </li>
       <li class="nav-item">
         <a href="html" class="nav-link">Meus Filmes</a>
