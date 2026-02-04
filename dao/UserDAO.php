@@ -47,9 +47,12 @@ class UserDAO implements UserDAOInterface {
         if($authUser){
 
             $this->setTokenToSession($user->token);
-        }
+
+            $this->message->setMessage("Seja bem-vindo!", "success", "editprofile.php");
+        } else{
 
        $this->message->setMessage("Usuário cadastrado com sucesso!", "success", "auth.php");
+        }
     }
 
     public function update(User $user, $redirect = true) {
