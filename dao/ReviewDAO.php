@@ -1,8 +1,8 @@
 <?php
 
-require_once("models/Review.php");
+require_once(__DIR__ . "/../models/Review.php");
 
-class ReviewDao implements ReviewDAOInterface {
+class ReviewDao {
 
     private $conn;
 

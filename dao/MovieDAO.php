@@ -1,8 +1,8 @@
 <?php
 
-require_once("models/Movie.php");
+require_once(__DIR__ . "/../models/Movie.php");
 
-class MovieDAO implements MovieDAOInterface {
+class MovieDAO {
 
     private $conn;
 

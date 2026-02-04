@@ -1,12 +1,21 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
   // Incluir o cabeçalho
   require_once("templates/header.php");
 
   // Incluir o DAO dos filmes
   require_once("dao/MovieDAO.php");
 
+  // Incluir as  Messagens 
+  require_once("models/Message.php");
+
   // Criar o objeto DAO para acessar os filmes
   $movieDao = new MovieDAO($conn, $BASE_URL);
+
+  
 
   // Buscar os filmes mais recentes
   $latestMovies = $movieDao->getLatestMovies() ?? []; /// Operador de Coalescencia nula
