@@ -47,8 +47,9 @@ if($type === "create") {
             // Preenche os dados da review
             $newReview->rating = $rating;
             $newReview->review = $review;
-            $newReview->moviesId = $moviesId;
-            $newReview->usersId = $userData->id;
+            $newReview->movies_id = $moviesId;
+            $newReview->users_id = $userData->id;
+
 
             // Salva a review no banco de dados
             $reviewDao->create($newReview);

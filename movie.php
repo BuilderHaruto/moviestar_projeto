@@ -52,7 +52,6 @@
 
 
 
-
 <div id="main-container" class="container-fluid">
   <div class="row">
     <div class="offset-md-1 col-md-6 movie-container">
@@ -109,9 +108,13 @@
       <?php endif; ?>
 
       <!-- Comentários -->
-      <?php foreach($movieReviews as $review): ?>
-        <?php require("templates/user_review.php"); ?>
-      <?php endforeach; ?>
+     <?php foreach($movieReviews as $review): ?>
+        <?php
+          $reviewUser = $userDao->findById($review->users_id);
+        ?>
+      <?php require("templates/user_review.php"); ?>
+    <?php endforeach; ?>
+
 
       <?php if(count($movieReviews) == 0): ?>
         <p class="empty-list">Não há comentários para este filme ainda...</p>
