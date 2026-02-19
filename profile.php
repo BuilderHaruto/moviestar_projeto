@@ -8,40 +8,58 @@
   require_once("auth.php");
 
   $user = new User();
-  $userDao = new UserDAO($conn, $BASE_URL, $message);
-  $movieDao = new MovieDAO($conn, $BASE_URL);
+$userDao = new UserDAO($conn, $BASE_URL, $message);
 
-  // Receber id do usuário
-  $id = filter_input(INPUT_GET, "id");
+$movieDao = new MovieDAO($conn, $BASE_URL, $message);
 
-  if(empty($id)) {
+// Receber id do usuário
+$id = filter_input(INPUT_GET, "id");
 
-    if(!empty($userData)) {
+// Garantir que a variável exista
+$userData = null;
 
-      $id = $userData->id;
+if (empty($id)) {
+
+    if (!empty($userData) && is_object($userData)) {
+
+        $id = $userData->id;
 
     } else {
 
-      $message->setMessage("Usuário não encontrado!", "error", "index.php");
+        $message->setMessage("Usuário não encontrado!", "error", "index.php");
+        exit;
 
     }
 
-  } else {
+} else {
 
     $userData = $userDao->findById($id);
 
     // Se não encontrar usuário
-    if(!$userData) {
-      $message->setMessage("Usuário não encontrado!", "error", "index.php");
+    if (!$userData || !is_object($userData)) {
+        $message->setMessage("Usuário não encontrado!", "error", "index.php");
+        exit;
     }
 
-  }
+}
 
-  $fullName = $user->getFullName($userData);
+$fullName = null;
 
-  if($userData->image == "") {
-    $userData->image = "user.png";
-  }
+if ($userData && is_object($userData)) {
+
+    $fullName = $user->getFullName($userData);
+
+    if (empty($userData->image)) {
+        $userData->image = "user.png";
+    }
+
+} else {
+
+    $message->setMessage("Usuário não encontrado!", "error", "index.php");
+    exit;
+
+}
+
 
   // Filmes que o usuário adicionou
   $userMovies = $movieDao->getMoviesByUserId($id);
@@ -52,9 +70,8 @@
       <div class="row profile-container">
         <div class="col-md-12 about-container">
           <h1 class="page-title"><?= $fullName ?></h1>
-          <div id="profile-image-container" class="profile-image" style="background-image: url('<?= $BASE_URL ?>img/users/<?= $userData->image ?>')"></div>
+          <div id="profile-image-container" class="profile-image" style="background-image: url('<?= $BASE_URL ?>/img/users/<?= $userData[image] ?>')"></div>
           <h3 class="about-title">Sobre:</h3>
-          Criar condicionais para exibiçao de perfil do usuario, tanto ifs como foreach apartir desse ponto
           <!--Verificar se a bio do objeto $userData esta vazia-->
           <?php if(!empty($userData->bio)): ?>
             <p class="profile-description"><?= $userData->bio ?></p>
@@ -67,7 +84,7 @@
           <h3>Filmes que enviou:</h3>
           <div class="movies-container">
           <!--Verifica se o array $userMovies tem algum filme-->
-             <?php if(count($userMovies) >= 0): ?>
+             <?php if(!empty($userMovies)): ?>
               <?php foreach($userMovies as $movie): ?>
               <?php require("templates/movie_card.php"); ?>
             <?php endforeach; ?>

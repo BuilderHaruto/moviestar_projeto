@@ -19,24 +19,7 @@ $userData = $userDao->verifyToken(true);
 
 $movieDao = new MovieDAO($conn);
 
-// PROCESSA O FORMULÁRIO
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $movie = new Movie();
-
-    $movie->title = $_POST["title"];
-    $movie->description = $_POST["description"];
-    $movie->category = $_POST["category"];
-    $movie->trailer = $_POST["trailer"];
-    $movie->length = $_POST["length"];
-    $movie->users_id = $userData->id;
-
-    $movie->image = "movie_cover.jpg";
-
-    $movieDao->create($movie);
-
-    $message->setMessage("Filme adicionado com sucesso!", "success", "index.php");
-}
 
 require_once("templates/header.php");
 ?>
@@ -46,7 +29,7 @@ require_once("templates/header.php");
     <div class="offset-md-4 col-md-4 new-movie-container">
       <h1 class="page-title">Adicionar Filme</h1>
       <p class="page-description">Adicione sua crítica e compartilhe com o mundo!</p>
-      <form action="" id="add-movie-form" method="POST" enctype="multipart/form-data">
+      <form action="movie_process.php" id="add-movie-form" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="type" value="create">
         <div class="form-group">
           <label for="title">Título:</label>

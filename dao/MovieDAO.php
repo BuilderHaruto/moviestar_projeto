@@ -127,30 +127,31 @@ class MovieDAO {
         return false;
     }
 
-    public function findByTitle($title) {
-        // Retorna filmes cujo título seja exatamente igual ao informado
+   public function findByTitle($title) {
+    // Prepara a query SQL usando LIKE para permitir buscas parciais
+    $stmt = $this->conn->prepare("SELECT * FROM movies WHERE title LIKE :title");
 
-        $stmt = $this->conn->prepare("SELECT * FROM movies WHERE title = :title");
-        
-        $stmt->bindParam(":title", $title);
-        
-        $stmt->execute();
+    $title = "%" . $title . "%";
 
-        $movie = [];
+    // Associa o valor ao parâmetro :title de forma segura (evita SQL Injection)
+    $stmt->bindParam(":title", $title);
 
-        // Verifica se encontrou registros
-        if($stmt->rowCount() > 0) {
-            
-            $data = $stmt->fetchAll();
-            
-            // Converte cada registro em objeto Movie
-            foreach($data as $item) {
-                $movie[] = $this->buildMovie($item);
-            }
-        }
+    // Executa a query no banco de dados
+    $stmt->execute();
 
-        return $movie;
+    // Array que vai armazenar os filmes encontrados
+    $movies = [];
+
+    // Percorre todos os registros retornados do banco
+    foreach ($stmt->fetchAll() as $item) {
+        // Converte cada registro em um objeto Movie
+        $movies[] = $this->buildMovie($item);
     }
+
+    // Retorna a lista de filmes encontrados (ou array vazio se não achou nada)
+    return $movies;
+}
+
 
     public function create(Movie $movie) {
         // Adiciona um novo filme no banco

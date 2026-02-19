@@ -1,22 +1,19 @@
 <?php
 
-  require_once(__DIR__ . "/../globals.php");
-  require_once(__DIR__ . "/../db.php");
-  require_once(__DIR__ . "/../models/Message.php");
-  require_once(__DIR__ . "/../dao/UserDAO.php");
+  require_once("globals.php");
+  require_once("db.php");
+  require_once("models/Message.php");
+  require_once("dao/UserDAO.php");
 
   $message = new Message($BASE_URL);
 
-  $flassMessage = $message->getMessage();
+  $flashMessage = $message->getMessage();
 
-  if(!empty($flassMessage["msg"])) {
-    // Limpar a mensagem
-    $message->clearMessage();
-  }
 
-  $userDao = new UserDAO($conn, $BASE_URL, $message);
+  $userDao = new UserDAO($conn, $BASE_URL);
 
-  $userData = $userDao->verifyToken(false);
+  $userData = $userDao->verifyToken(false); // verifica token e retorna os dados do usuário logado
+  
 
 ?>
 <!DOCTYPE html>
@@ -35,13 +32,26 @@
 </head>
 <body>
   <header>
+  <!-- MENSAGENS DO SISTEMA -->
+<?php if(!empty($flashMessage["msg"])): ?>
+    <div class="msg-container container-fluid text-center p-3">
+      <p class="msg <?= $flashMessage["type"] ?> m-0">
+        <?= $flashMessage["msg"] ?>
+      </p>
+    </div>
+    <?php 
+      // LIMPE AQUI, depois de exibir
+      $message->clearMessage(); 
+    ?>
+  <?php endif; ?>
+
   <nav id="main-navbar">
     <a href="index.php" class="navbar-brand">
       <img src="img/logo.svg" alt="MovieStar" id="logo">
       <span id="moviestar-title">MovieStar</span>
     </a>
     <!-- BOTÃO SEARCH -->
-    <form action="#" method="GET" id="search-form">
+<form action="<?= $BASE_URL ?>search.php" method="GET" id="search-form">
       <input type="text" name="q" id="search" placeholder="Buscar Filmes" aria-label="Search">
       <button type="submit"><i class="bi bi-search"></i></button>
     </form> <!--vericação de usuario -->
@@ -54,7 +64,7 @@
         <a href="<?= $BASE_URL ?>dashboard.php" class="nav-link">Meus Filmes</a>
       </li>
       <li class="nav-item">
-        <a href="<?= $BASE_URL ?>editprofile.php" class="nav-link bold"><?= $userData->name?></a>
+        <a href="<?= $BASE_URL ?>editprofile.php" class="nav-link bold"><?= $userData->name ?></a>
       </li>
       <li class="nav-item">
         <a href="<?= $BASE_URL ?>logout.php" class="nav-link">Sair</a>
@@ -68,103 +78,3 @@
   </nav>
   
 </header>
-
-<style>
-  * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* BODY */
-body {
-  background-color: #000;
-  color: #fff;
-}
-
-/* NAVBAR */
-#main-navbar {
-  background-color: #111;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 30px;
-  border-bottom: 1px solid #222;
-  height: 60px;
-}
-
-/* LOGO */
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-#logo {
-  width: 40px;
-  margin-right: 10px;
-}
-
-#moviestar-title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #fff;  
-}
-
-/* BUSCA */
-#search-form {
-  display: flex;
-  align-items: center;
-  width: 50%;
-}
-
-#search {
-  width: 100%;
-  height: 40px; 
-  padding: 10px 14px;
-  border-radius: 4px 0 0 4px;
-  border: none;
-  outline: none;
-  font-size: 14px;
-}
-
-#search-form button {
-  background-color: #f7f7f7;
-  height: 40px;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-}
-#search-form :hover {
-  background-color: #f1f1f1;
-}
-/* MENU */
-.navbar-nav {
-  list-style: none;
-  display: flex;
-  flex-direction: inherit;
-}
-
-.nav-item {
-  margin-left: 18px;
-  display: inline-block;
-}
-
-.nav-link {
-  color: #ddd;
-  text-decoration: none;
-  font-size: clamp(0.5rem, 1.2vw, 1rem);
-  transition: 0.3s;
-}
-
-.nav-link:hover, .nav-link.bold:hover {
-  color: #f5c518;
-}
-
-.nav-link.bold {
-  font-weight: bold;
-  color: #fff;
-}
-</style>
