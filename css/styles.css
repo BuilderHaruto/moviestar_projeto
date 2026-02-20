@@ -185,6 +185,16 @@ body {
   font-size: 15px;
 }
 
+/* IMAGEM DE PERFIL PARA AVALIAÇÕES DE FILMES */
+.profile-image-container {
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}
+
+
 
 
 /* =========================
